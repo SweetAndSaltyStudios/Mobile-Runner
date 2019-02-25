@@ -10,9 +10,9 @@ namespace SweetAndSaltyStudios
         private Transform levelParent;
 
         private float spawnZ = 8f;
-        private readonly float platformLenght = 20f;
+        private readonly float platformLenght = 30f;
         private readonly int amountOfTilesOnScreen = 10;
-        private readonly float safeZone = 20.0f;
+        private readonly float safeZone = 30.0f;
 
         private int lastPlatformIndex = 0;
         private int collectableCount;

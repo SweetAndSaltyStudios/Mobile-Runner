@@ -19,7 +19,7 @@ namespace SweetAndSaltyStudios
         private float movementDirection;
         private readonly float movementTreshold = 0.1f;
         
-        private readonly float moveSpeed = 2000;
+        private readonly float moveSpeed = 10;
 
         private bool isMovingHorizontaly;
 
@@ -64,30 +64,21 @@ namespace SweetAndSaltyStudios
             {
                 rigidbody.AddForce(Vector3.forward * moveSpeed);
             }
-            //rigidbody.MovePosition(Vector3.forward * moveSpeed);
 
             if (isMovingHorizontaly)
-            {
-                //var newPosition = rigidbody.position + Vector3.right * movementDirection;
-                //newPosition.x = Mathf.Clamp(newPosition.x, -5, 5);
-                //rigidbody.MovePosition(newPosition);
+            {             
                 rigidbody.AddForce(Vector3.right * movementDirection * moveSpeed);
-            }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.layer.Equals(9))
-            {
-                other.gameObject.SetActive(false);
-                LevelManager.Instance.AddCollectable(1);
-            }
+            }    
         }
 
         private void OnCollisionEnter(Collision collision)
         {
-            canMove = false;
-            GameMaster.Instance.RestartScene();
+            if (collision.gameObject.layer.Equals(10))
+            {
+                canMove = false;
+                rigidbody.constraints = RigidbodyConstraints.None;
+                GameMaster.Instance.RestartScene();
+            }          
         }
     }
 }

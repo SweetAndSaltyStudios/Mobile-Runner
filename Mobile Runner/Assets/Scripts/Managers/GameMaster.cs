@@ -25,6 +25,11 @@ public class GameMaster : Singelton<GameMaster>
         }
     }
 
+    private void Awake()
+    {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+
     private void LoadScene(int sceneIndex)
     {
         SceneManager.LoadScene(sceneIndex);

@@ -30,5 +30,7 @@ public class CameraEngine : Singelton<CameraEngine>
     private void FollowTarget(Transform target)
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, currentCameraTarget.position.z + camerasZOffset);
+
+        
     }
 }

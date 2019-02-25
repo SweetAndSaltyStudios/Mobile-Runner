@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ResourceManager : Singelton<ResourceManager>
 {
@@ -8,4 +7,7 @@ public class ResourceManager : Singelton<ResourceManager>
 
     [Header("Platform prefabs")]
     public GameObject[] PlatformPrefabs;
+
+    [Header("Effects")]
+    public GameObject ShatterEffectPrefab;
 }

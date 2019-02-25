@@ -14,9 +14,9 @@ TagManager:
   - 
   - 
   - PostProcessing
-  - Collectables
-  - 
-  - 
+  - Collectable
+  - Obstacle
+  - Character
   - 
   - 
   - 
