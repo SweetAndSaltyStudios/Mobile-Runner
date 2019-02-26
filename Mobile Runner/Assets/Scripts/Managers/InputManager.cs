@@ -4,13 +4,28 @@ namespace SweetAndSaltyStudios
 {
     public class InputManager : Singelton<InputManager>
     {
-        private bool isFlat = true;
+        private readonly bool isFlat = true;
 
-        public float GetHorizontalAxis { get { return Input.GetAxis("Horizontal"); } }
-        public float GetVerticalAxis { get { return Input.GetAxis("Vertical"); } }
+        public float GetHorizontalAxis
+        {
+            get
+            {
+                return Input.GetAxis("Horizontal");
+            }
+        }
+        public float GetVerticalAxis
+        {
+            get
+            {
+                return Input.GetAxis("Vertical");
+            }
+        }
 
-        public Vector3 Tilt { get; private set; }
-
+        public Vector3 Tilt
+        {
+            get;
+            private set;
+        }
         public float GetHorizontalAxisTilt
         {
             get
@@ -24,11 +39,6 @@ namespace SweetAndSaltyStudios
 
                 return Tilt.x;
             }
-        }
-
-        private void Awake()
-        {
-
         }
     }
 }

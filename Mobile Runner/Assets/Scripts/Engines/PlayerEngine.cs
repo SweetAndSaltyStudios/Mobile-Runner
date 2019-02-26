@@ -5,7 +5,8 @@ namespace SweetAndSaltyStudios
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerEngine : MonoBehaviour
     {
-        private bool canMove;
+        private const float MAX_SPEED_LIMIT = 200f;
+        private const float FORWARD_SPEED_INCREMENT_MODIFIER = 0.1f;
 
         public Vector3 PlayerPosition
         {
@@ -16,12 +17,14 @@ namespace SweetAndSaltyStudios
         }
 
         private new Rigidbody rigidbody;
+        private bool canMove;
         private float movementDirection;
-        private readonly float movementTreshold = 0.1f;
+        // private readonly float movementTreshold = 0.1f;
         
-        private readonly float moveSpeed = 10;
+        private readonly float horizontalMovementSpeed = 10f;
+        private float forwardMovementSpeed = 50f;
 
-        private bool isMovingHorizontaly;
+        private readonly float respawnOffset = -5f;
 
         private void Awake()
         {
@@ -36,6 +39,7 @@ namespace SweetAndSaltyStudios
 
         private void OnDisable()
         {
+            forwardMovementSpeed = 0;
             CameraEngine.Instance.CameraTarget = null;
         }
 
@@ -49,36 +53,40 @@ namespace SweetAndSaltyStudios
 #else
               movementDirection = InputManager.Instance.GetHorizontalAxisTilt;
 #endif
-
-            isMovingHorizontaly = Mathf.Abs(movementDirection) > movementTreshold;
-
-            if(PlayerPosition.y <= -5f)
+         
+            if (PlayerPosition.y <= respawnOffset)
             {
-                transform.position = new Vector3(0, 0.6f, transform.position.z);
+                Die();
             }
         }
 
         private void FixedUpdate()
         {
-            if(rigidbody.velocity.z < 20)
-            {
-                rigidbody.AddForce(Vector3.forward * moveSpeed);
-            }
+            if (canMove == false)
+                return;
 
-            if (isMovingHorizontaly)
-            {             
-                rigidbody.AddForce(Vector3.right * movementDirection * moveSpeed);
-            }    
+            rigidbody.MovePosition(transform.position + (new Vector3(movementDirection * horizontalMovementSpeed, 0, forwardMovementSpeed)) * Time.deltaTime);
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer.Equals(10))
             {
-                canMove = false;
-                rigidbody.constraints = RigidbodyConstraints.None;
-                GameMaster.Instance.RestartScene();
+                Die();
             }          
+        }
+
+        public void Die()
+        {
+            canMove = false;
+            rigidbody.constraints = RigidbodyConstraints.None;
+            GameMaster.Instance.RestartScene();
+        }
+
+        public void IncreaseMovementSpeed()
+        {
+            var newForwardSpeed = forwardMovementSpeed + FORWARD_SPEED_INCREMENT_MODIFIER;
+            forwardMovementSpeed = newForwardSpeed < MAX_SPEED_LIMIT ? newForwardSpeed : MAX_SPEED_LIMIT;
         }
     }
 }

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameMaster : Singelton<GameMaster>
+public class GameMaster : SingeltonPersistant<GameMaster>
 {
     public float Slowness = 10f;
     private bool isLoading;

@@ -7,7 +7,16 @@ namespace SweetAndSaltyStudios
     {
         private Queue<GameObject> createdPlatforms = new Queue<GameObject>();
 
-        private Transform levelParent;
+        public Transform PlatformParent
+        {
+            get;
+            private set;
+        }
+        public Transform OthersParent
+        {
+            get;
+            private set;
+        }
 
         private float spawnZ = 8f;
         private readonly float platformLenght = 30f;
@@ -21,8 +30,14 @@ namespace SweetAndSaltyStudios
 
         private void Awake()
         {
-            levelParent = new GameObject("Level").transform;
+            var levelParent = new GameObject("Level").transform;
             levelParent.SetParent(transform);
+
+            PlatformParent = new GameObject("Platforms").transform;
+            PlatformParent.SetParent(levelParent);
+
+            OthersParent = new GameObject("Others").transform;
+            OthersParent.SetParent(levelParent);
         }
 
         private void Start()
@@ -46,7 +61,11 @@ namespace SweetAndSaltyStudios
                 }
             }
 
-            currentPlayer = CreateModel(ResourceManager.Instance.PlayerPrefab, levelParent, new Vector3(0, 0.6f, 0)).GetComponent<PlayerEngine>();
+            currentPlayer = ObjectPoolManager.Instance.SpawnObject(
+                ResourceManager.Instance.PlayerPrefab,
+                new Vector3(0, 0.6f, 0),
+                Quaternion.identity,
+                OthersParent).GetComponent<PlayerEngine>();
         }
 
         private void CreatePlatform(int platformIndex = -1)
@@ -55,19 +74,21 @@ namespace SweetAndSaltyStudios
 
             if (platformIndex == -1)
             {
-                 newPlatform = CreateModel(
-                   ResourceManager.Instance.PlatformPrefabs[RandomPlatformIndex()],
-                   levelParent,
-                   Vector3.forward * spawnZ
+                newPlatform = ObjectPoolManager.Instance.SpawnObject(
+                  ResourceManager.Instance.PlatformPrefabs[RandomPlatformIndex()],
+                  Vector3.forward * spawnZ,
+                  Quaternion.identity,
+                  PlatformParent
                );
             }
             else
             {
-                newPlatform = CreateModel(
+                newPlatform =  ObjectPoolManager.Instance.SpawnObject (
                    ResourceManager.Instance.PlatformPrefabs[platformIndex],
-                   levelParent,
-                   Vector3.forward * spawnZ
-               );
+                   Vector3.forward * spawnZ,
+                   Quaternion.identity,
+                   PlatformParent
+               );          
             }
            
             spawnZ += platformLenght;
@@ -76,8 +97,7 @@ namespace SweetAndSaltyStudios
 
         private void DestroyPlatform()
         {
-            var platformToDestroy = createdPlatforms.Dequeue();
-            Destroy(platformToDestroy);
+            ObjectPoolManager.Instance.DespawnObject(createdPlatforms.Dequeue());
         }
 
         private void Update()
@@ -86,14 +106,9 @@ namespace SweetAndSaltyStudios
             {
                 CreatePlatform();
                 DestroyPlatform();
-            }
-        }
 
-        private GameObject CreateModel(GameObject modelPrefab, Transform parent = null, Vector3 position = new Vector3(), Quaternion rotation = new Quaternion())
-        {
-            var newModelPrefab = Instantiate(modelPrefab, position, rotation, parent);
-            newModelPrefab.name = modelPrefab.name;
-            return newModelPrefab;
+                currentPlayer.IncreaseMovementSpeed();
+            }
         }
 
         private int RandomPlatformIndex()
