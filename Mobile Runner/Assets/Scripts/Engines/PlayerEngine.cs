@@ -18,11 +18,12 @@ namespace SweetAndSaltyStudios
 
         private new Rigidbody rigidbody;
         private bool canMove;
-        private float movementDirection;
+        private float horizontalMovementDirection;
         // private readonly float movementTreshold = 0.1f;
         
         private readonly float horizontalMovementSpeed = 10f;
-        private float forwardMovementSpeed = 50f;
+        private float currentForwardMovementSpeed;
+        private float startingForwardMovementSpeed = 20f;
 
         private readonly float respawnOffset = -5f;
 
@@ -35,11 +36,12 @@ namespace SweetAndSaltyStudios
         {
             CameraEngine.Instance.CameraTarget = transform;
             canMove = true;
+            currentForwardMovementSpeed = startingForwardMovementSpeed;
         }
 
         private void OnDisable()
         {
-            forwardMovementSpeed = 0;
+            currentForwardMovementSpeed = 0;
             CameraEngine.Instance.CameraTarget = null;
         }
 
@@ -48,16 +50,24 @@ namespace SweetAndSaltyStudios
             if (canMove == false)
                 return;
 
+            if (!GameMaster.Instance.CurrentGamestate.Equals(GAMESTATE.RUNNING))
+            {
+                return;
+            }
+
 #if UNITY_EDITOR
-              movementDirection = InputManager.Instance.GetHorizontalAxis;
+
+              horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;
 #else
-              movementDirection = InputManager.Instance.GetHorizontalAxisTilt;
+              horizontalMovementDirection = InputManager.Instance.GetHorizontalAxisTilt;
 #endif
-         
+
             if (PlayerPosition.y <= respawnOffset)
             {
                 Die();
             }
+
+            LevelManager.Instance.UpdateScoreModifier(currentForwardMovementSpeed - startingForwardMovementSpeed);
         }
 
         private void FixedUpdate()
@@ -65,7 +75,12 @@ namespace SweetAndSaltyStudios
             if (canMove == false)
                 return;
 
-            rigidbody.MovePosition(transform.position + (new Vector3(movementDirection * horizontalMovementSpeed, 0, forwardMovementSpeed)) * Time.deltaTime);
+            if (!GameMaster.Instance.CurrentGamestate.Equals(GAMESTATE.RUNNING))
+            {
+                return;
+            }
+
+            rigidbody.MovePosition(transform.position + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime);
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -85,8 +100,8 @@ namespace SweetAndSaltyStudios
 
         public void IncreaseMovementSpeed()
         {
-            var newForwardSpeed = forwardMovementSpeed + FORWARD_SPEED_INCREMENT_MODIFIER;
-            forwardMovementSpeed = newForwardSpeed < MAX_SPEED_LIMIT ? newForwardSpeed : MAX_SPEED_LIMIT;
+            var newForwardSpeed = currentForwardMovementSpeed + FORWARD_SPEED_INCREMENT_MODIFIER;
+            currentForwardMovementSpeed = newForwardSpeed < MAX_SPEED_LIMIT ? newForwardSpeed : MAX_SPEED_LIMIT;
         }
     }
 }

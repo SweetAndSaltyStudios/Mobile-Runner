@@ -2,8 +2,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum GAMESTATE
+{
+    MAINMENU,
+    PAUSED,
+    RUNNING
+}
+
 public class GameMaster : SingeltonPersistant<GameMaster>
 {
+    public GAMESTATE CurrentGamestate;
+
+
     public float Slowness = 10f;
     private bool isLoading;
 
@@ -23,9 +33,18 @@ public class GameMaster : SingeltonPersistant<GameMaster>
 
             return nextSceneIndex >= SceneManager.sceneCount ? 0 : nextSceneIndex;
         }
+        private set
+        {
+
+        }
     }
 
-    private void Awake()
+    protected override void Awake()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
@@ -39,6 +58,38 @@ public class GameMaster : SingeltonPersistant<GameMaster>
     {
         if(isLoading == false)
         StartCoroutine(ISlowTime(3f));
+    }
+
+    public void ChangeGameState(GAMESTATE newGamestate)
+    {
+        CurrentGamestate = newGamestate;
+
+        switch (CurrentGamestate)
+        {
+            case GAMESTATE.MAINMENU:
+
+                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+
+                break;
+
+            case GAMESTATE.PAUSED:
+
+                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+
+                break;
+
+            case GAMESTATE.RUNNING:
+
+                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+
+                break;
+
+            default:
+
+                Debug.LogWarning("GAMESTATE: Default");
+
+                break;
+        }
     }
 
     private IEnumerator ISlowTime(float slowDuration)

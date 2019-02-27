@@ -9,7 +9,7 @@ public class CameraEngine : Singelton<CameraEngine>
     {
         get
         {
-            return currentCameraTarget = currentCameraTarget ?? transform;
+            return currentCameraTarget = currentCameraTarget ?? null;
         }
         set
         {
@@ -24,13 +24,16 @@ public class CameraEngine : Singelton<CameraEngine>
 
     private void LateUpdate()
     {
+        if(CameraTarget == null)
+        {
+            return;
+        }
+
         FollowTarget(CameraTarget);      
     }
 
     private void FollowTarget(Transform target)
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, currentCameraTarget.position.z + camerasZOffset);
-
-        
     }
 }

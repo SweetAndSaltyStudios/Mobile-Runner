@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace SweetAndSaltyStudios
 {
@@ -38,6 +39,22 @@ namespace SweetAndSaltyStudios
                 }
 
                 return Tilt.x;
+            }
+        }
+        public bool FirstTouch
+        {
+            get
+            {
+                return Input.GetMouseButtonDown(0);
+            }
+        }
+
+        public bool IsPointerOverUI
+        {
+            get
+            {
+                Debug.LogError(!EventSystem.current.IsPointerOverGameObject());
+                return !EventSystem.current.IsPointerOverGameObject();
             }
         }
     }

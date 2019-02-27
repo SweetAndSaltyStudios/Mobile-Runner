@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SweetAndSaltyStudios
@@ -27,6 +28,9 @@ namespace SweetAndSaltyStudios
         private int collectableCount;
 
         private PlayerEngine currentPlayer;
+
+        private float score;
+        private float scoreModifier;
 
         private void Awake()
         {
@@ -102,6 +106,19 @@ namespace SweetAndSaltyStudios
 
         private void Update()
         {
+            if (InputManager.Instance.FirstTouch && InputManager.Instance.IsPointerOverUI)
+            {
+                GameMaster.Instance.ChangeGameState(GAMESTATE.RUNNING);
+            }
+
+            if (!GameMaster.Instance.CurrentGamestate.Equals(GAMESTATE.RUNNING))
+            {
+                return;
+            }
+
+            if (currentPlayer == null)
+                return;
+
             if(currentPlayer.PlayerPosition.z - safeZone > (spawnZ - amountOfTilesOnScreen * platformLenght))
             {
                 CreatePlatform();
@@ -123,10 +140,18 @@ namespace SweetAndSaltyStudios
                 randomIndex = Random.Range(0, ResourceManager.Instance.PlatformPrefabs.Length);
             }
             while (randomIndex == lastPlatformIndex);
-            
+
             lastPlatformIndex = randomIndex;
 
             return randomIndex;
+        }
+
+        public void UpdateScoreModifier(float modifierAmount)
+        {
+            scoreModifier += modifierAmount;
+
+            UIManager.Instance.UpdateScoreModifier(modifierAmount);
+
         }
 
         public void AddCollectable(int amount)
