@@ -3,8 +3,19 @@ using UnityEngine;
 
 public class ObjectPoolManager : Singelton<ObjectPoolManager>
 {
+    #region VARIABLES
 
     private Dictionary<string, Stack<GameObject>> pooledObjects = new Dictionary<string, Stack<GameObject>>();
+
+    #endregion VARIABLES
+
+    #region PROPERTIES
+
+
+
+    #endregion PROPERTIES
+
+    #region UNITY_FUNCTIONS
 
     public GameObject SpawnObject(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent)
     {
@@ -12,9 +23,9 @@ public class ObjectPoolManager : Singelton<ObjectPoolManager>
 
         pooledObjects.TryGetValue(prefabName, out Stack<GameObject> pooledInstances);
 
-        if(pooledInstances != null)
+        if (pooledInstances != null)
         {
-            if (pooledInstances.Count > 0) 
+            if (pooledInstances.Count > 0)
             {
                 var instance = pooledInstances.Pop();
                 instance.transform.SetPositionAndRotation(position, rotation);
@@ -30,7 +41,7 @@ public class ObjectPoolManager : Singelton<ObjectPoolManager>
         {
             pooledObjects.Add(prefabName, new Stack<GameObject>());
 
-            return CreatePrefabInstnace(prefab, position, rotation, parent);         
+            return CreatePrefabInstnace(prefab, position, rotation, parent);
         }
     }
 
@@ -68,4 +79,18 @@ public class ObjectPoolManager : Singelton<ObjectPoolManager>
         newPrefabInstnace.name = prefab.name;
         return newPrefabInstnace;
     }
+
+    #endregion UNITY_FUNCTIONS
+
+    #region CUSTOM_FUNCTIONS
+
+
+
+    #endregion CUSTOM_FUNCTIONS
+
+    #region COROUTINES
+
+
+
+    #endregion COROUTINES
 }

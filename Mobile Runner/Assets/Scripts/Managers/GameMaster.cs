@@ -1,111 +1,84 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public enum GAMESTATE
+public enum GAME_STATE
 {
-    MAINMENU,
+    MAIN_MENU,
+    IN_GAME,
     PAUSED,
-    RUNNING
+    GAME_OVER
 }
 
-public class GameMaster : SingeltonPersistant<GameMaster>
+namespace SweetAndSaltyStudios
 {
-    public GAMESTATE CurrentGamestate;
-
-
-    public float Slowness = 10f;
-    private bool isLoading;
-
-    public int CurrentSceneIndex
+    public class GameMaster : SingeltonPersistant<GameMaster>
     {
-        get
+        #region VARIABLES
+
+
+
+        #endregion VARIABLES
+
+        #region PROPERTIES
+
+        public GAME_STATE CurrentGameState
         {
-            return SceneManager.GetActiveScene().buildIndex;
+            get;
+            private set;
         }
-    }
 
-    public int NextSceneIndex
-    {
-        get
+        #endregion PROPERTIES
+
+        #region UNITY_FUNCTIONS
+
+        protected override void Awake()
         {
-            var nextSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-
-            return nextSceneIndex >= SceneManager.sceneCount ? 0 : nextSceneIndex;
+            Initialize();
         }
-        private set
+
+        #endregion UNITY_FUNCTIONS
+
+        #region CUSTOM_FUNCTIONS
+
+        private void Initialize()
         {
-
+            Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
-    }
 
-    protected override void Awake()
-    {
-        Initialize();
-    }
-
-    private void Initialize()
-    {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-    }
-
-    private void LoadScene(int sceneIndex)
-    {
-        SceneManager.LoadScene(sceneIndex);
-    }
-
-    public void RestartScene()
-    {
-        if(isLoading == false)
-        StartCoroutine(ISlowTime(3f));
-    }
-
-    public void ChangeGameState(GAMESTATE newGamestate)
-    {
-        CurrentGamestate = newGamestate;
-
-        switch (CurrentGamestate)
+        public void ChangeGameState(GAME_STATE newGameState)
         {
-            case GAMESTATE.MAINMENU:
+            CurrentGameState = newGameState;
 
-                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+            switch (CurrentGameState)
+            {
+                case GAME_STATE.MAIN_MENU:
 
-                break;
+                    break;
 
-            case GAMESTATE.PAUSED:
+                case GAME_STATE.IN_GAME:
 
-                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+                    break;
 
-                break;
+                case GAME_STATE.PAUSED:
 
-            case GAMESTATE.RUNNING:
+                    break;
 
-                Debug.LogWarning("GAMESTATE: " + CurrentGamestate);
+                case GAME_STATE.GAME_OVER:
 
-                break;
+                    break;
 
-            default:
+                default:
 
-                Debug.LogWarning("GAMESTATE: Default");
-
-                break;
+                    break;
+            }
         }
-    }
 
-    private IEnumerator ISlowTime(float slowDuration)
-    {
-        isLoading = true;
+        #endregion CUSTOM_FUNCTIONS
 
-        Time.timeScale = 1f / Slowness;
-        Time.fixedDeltaTime /= Slowness;
+        #region COROUTINES
 
-        yield return new WaitForSeconds(slowDuration / Slowness);
 
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime *= Slowness;
 
-        LoadScene(CurrentSceneIndex);
-
-        isLoading = false;
+        #endregion COROUTINES
     }
 }

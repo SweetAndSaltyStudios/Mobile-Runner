@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace SweetAndSaltyStudios
 {
@@ -7,6 +8,8 @@ namespace SweetAndSaltyStudios
     {
         private const float MAX_SPEED_LIMIT = 200f;
         private const float FORWARD_SPEED_INCREMENT_MODIFIER = 0.1f;
+
+        private Coroutine iDie;
 
         public Vector3 PlayerPosition
         {
@@ -17,16 +20,19 @@ namespace SweetAndSaltyStudios
         }
 
         private new Rigidbody rigidbody;
-        private bool canMove;
         private float horizontalMovementDirection;
-        // private readonly float movementTreshold = 0.1f;
         
         private readonly float horizontalMovementSpeed = 10f;
         private float currentForwardMovementSpeed;
-        private float startingForwardMovementSpeed = 20f;
+        private readonly float startingForwardMovementSpeed = 20f;
 
         private readonly float respawnOffset = -5f;
 
+        private bool canMove;
+
+        private readonly float angularVelocityHitBoost = 8f;
+        
+     
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody>();
@@ -34,59 +40,57 @@ namespace SweetAndSaltyStudios
 
         private void OnEnable()
         {
+            if (iDie != null)
+                iDie = null;
+
             CameraEngine.Instance.CameraTarget = transform;
-            canMove = true;
             currentForwardMovementSpeed = startingForwardMovementSpeed;
+            canMove = true;
         }
 
         private void OnDisable()
         {
             currentForwardMovementSpeed = 0;
             CameraEngine.Instance.CameraTarget = null;
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
+
         }
 
         private void Update()
         {
-            if (canMove == false)
-                return;
-
-            if (!GameMaster.Instance.CurrentGamestate.Equals(GAMESTATE.RUNNING))
+            if (canMove)
             {
-                return;
+                horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;
+             
+                LevelManager.Instance.UpdateScoreModifier(currentForwardMovementSpeed - startingForwardMovementSpeed);
             }
-
-#if UNITY_EDITOR
-
-              horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;
-#else
-              horizontalMovementDirection = InputManager.Instance.GetHorizontalAxisTilt;
-#endif
 
             if (PlayerPosition.y <= respawnOffset)
             {
                 Die();
             }
-
-            LevelManager.Instance.UpdateScoreModifier(currentForwardMovementSpeed - startingForwardMovementSpeed);
         }
 
         private void FixedUpdate()
         {
-            if (canMove == false)
-                return;
-
-            if (!GameMaster.Instance.CurrentGamestate.Equals(GAMESTATE.RUNNING))
+            if (canMove)
             {
-                return;
-            }
+                //  rigidbody.MovePosition(PlayerPosition + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime);
 
-            rigidbody.MovePosition(transform.position + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime);
+                rigidbody.position = rigidbody.position + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime;
+                rigidbody.position = new Vector3(Mathf.Clamp(rigidbody.position.x, -4, 4), rigidbody.position.y, rigidbody.position.z);
+            }
         }
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.layer.Equals(10))
             {
+                Debug.LogWarning("Collision Enter: Hit " + collision.gameObject.name);
+
+                AudioManager.Instance.PlaySfxAtPoint("Crash", PlayerPosition);
+
                 Die();
             }          
         }
@@ -94,14 +98,28 @@ namespace SweetAndSaltyStudios
         public void Die()
         {
             canMove = false;
-            rigidbody.constraints = RigidbodyConstraints.None;
-            GameMaster.Instance.RestartScene();
+
+            rigidbody.angularVelocity *= angularVelocityHitBoost;
+
+            if (iDie == null)
+            iDie = StartCoroutine(IDie());
         }
 
         public void IncreaseMovementSpeed()
         {
             var newForwardSpeed = currentForwardMovementSpeed + FORWARD_SPEED_INCREMENT_MODIFIER;
             currentForwardMovementSpeed = newForwardSpeed < MAX_SPEED_LIMIT ? newForwardSpeed : MAX_SPEED_LIMIT;
+        }
+
+        private IEnumerator IDie()
+        {
+            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
+
+            yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
+
+            LevelManager.Instance.ClearLevel();
+
+            yield return null;
         }
     }
 }

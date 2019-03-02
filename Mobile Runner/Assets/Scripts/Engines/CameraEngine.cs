@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class CameraEngine : Singelton<CameraEngine>
 {
     private Transform currentCameraTarget;
     private float camerasZOffset;
+
+    public bool IsShaking
+    {
+        get;
+        private set;
+    }
 
     public Transform CameraTarget
     {
@@ -35,5 +42,35 @@ public class CameraEngine : Singelton<CameraEngine>
     private void FollowTarget(Transform target)
     {
         transform.position = new Vector3(transform.position.x, transform.position.y, currentCameraTarget.position.z + camerasZOffset);
+    }
+
+    public void Shake(float duration, float magnitude)
+    {
+        StartCoroutine(IShake(duration, magnitude));
+    }
+
+    private IEnumerator IShake(float duration, float magnitude)
+    {
+        IsShaking = true;
+
+        var originalPosition = transform.localPosition;
+
+        var elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            var x = Random.Range(-1f, 1f) * magnitude;
+            var y = Random.Range(-1f, 1f) * magnitude;
+
+            transform.localPosition = new Vector3(x, y + originalPosition.y, originalPosition.z);
+
+            elapsed += Time.unscaledDeltaTime;
+
+            yield return null;
+        }
+
+        transform.localPosition = originalPosition;
+
+        IsShaking = false;
     }
 }

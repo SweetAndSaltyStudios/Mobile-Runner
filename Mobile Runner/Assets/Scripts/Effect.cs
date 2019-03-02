@@ -16,7 +16,7 @@ public class Effect : MonoBehaviour
         LifeTime();
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         iLifeTime = null;
     }
@@ -39,6 +39,6 @@ public class Effect : MonoBehaviour
     {
         yield return new WaitUntil(() => particleSystem.isPlaying.Equals(false));
 
-        Destroy(gameObject);
+        ObjectPoolManager.Instance.DespawnObject(gameObject);
     }
 }
