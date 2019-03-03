@@ -8,8 +8,6 @@ namespace SweetAndSaltyStudios
         public override void Open()
         {
             base.Open();
-
-            UIManager.Instance.ScreenFadeShader(1f);
         }
     }
 }

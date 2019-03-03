@@ -11,30 +11,16 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
-        public Image ScreenFadeImage;
         private Material dissolveMaterial;
         private int dissolveParameterID;
 
         private Action[] actions;
 
-        public Sprite[] PauseButtonSprites;
-
         public Scrollbar AccelerationVisualBar;
         public TextMeshProUGUI CollectableCountText;
+        public TextMeshProUGUI LoadingText;
 
-        public CanvasGroup ScreenFadeImageCanvasGroup;
-
-        public MainMenuPanel MainMenuPanel;
-        public PausePanel PausePanel;
-        public GameOverPanel GameOverPanel;
-        public HUDPanel HUDPanel;
-
-        public OptionsPanel OptionsPanel;
-        public AudioPanel AudioPanel;
-        public GraphicsPanel GraphicsPanel;
-        public SocialPanel SocialPanel;
-        public HowToPlayPanel HowToPlayPanel;
-
+        private CanvasGroup screenFadeImageCanvasGroup;
         private TextMeshProUGUI scoreModifierText;
 
         private readonly float fadeDuration = 2f;
@@ -42,6 +28,53 @@ namespace SweetAndSaltyStudios
         #endregion VARIABLES
 
         #region PROPERTIES
+
+        public MainMenuPanel MainMenuPanel
+        {
+            get;
+            private set;
+        }
+        public PausePanel PausePanel
+        {
+            get;
+            private set;
+        }
+        public GameOverPanel GameOverPanel
+        {
+            get;
+            private set;
+        }
+        public HUDPanel HudPanel
+        {
+            get;
+            private set;
+        }
+
+        public OptionsPanel OptionsPanel
+        {
+            get;
+            private set;
+        }
+        public AudioPanel AudioPanel
+        {
+            get;
+            private set;
+        }
+        public GraphicsPanel SraphicsPanel
+        {
+            get;
+            private set;
+        }
+        public SocialPanel SocialPanel
+        {
+            get;
+            private set;
+        }
+        public HowToPlayPanel HowToPlayPanel
+        {
+            get;
+            private set;
+        }
 
         public UIPanel CurrentPanel
         {
@@ -66,10 +99,9 @@ namespace SweetAndSaltyStudios
 
         private void Start()
         {
+            dissolveMaterial.SetFloat(dissolveParameterID, 0f);
 
-
-            //ScreenFadeImageCanvasGroup.alpha = 1f;
-            //ScreenFade(0f);
+            ScreenFadeShader(1f);
 
             ChangePanel(MainMenuPanel);
         }
@@ -110,23 +142,18 @@ namespace SweetAndSaltyStudios
 
             OptionsPanel = panels.Find("OptionsPanel").GetComponent<OptionsPanel>();
             AudioPanel = panels.Find("AudioPanel").GetComponent<AudioPanel>();
-            GraphicsPanel = panels.Find("GraphicsPanel").GetComponent<GraphicsPanel>();
+            SraphicsPanel = panels.Find("GraphicsPanel").GetComponent<GraphicsPanel>();
             SocialPanel = panels.Find("SocialPanel").GetComponent<SocialPanel>();
             HowToPlayPanel = panels.Find("HowToPlayPanel").GetComponent<HowToPlayPanel>();
            
-            HUDPanel = panels.Find("HUDPanel").GetComponent<HUDPanel>();
+            HudPanel = panels.Find("HUDPanel").GetComponent<HUDPanel>();
 
-            scoreModifierText = HUDPanel.transform.Find("InfoContainer").Find("ScoreModifierText").GetComponent<TextMeshProUGUI>();
+            scoreModifierText = HudPanel.transform.Find("InfoContainer").Find("ScoreModifierText").GetComponent<TextMeshProUGUI>();
 
-            ScreenFadeImage = canvas.Find("ScreenFadeImage").GetComponent<Image>();
-
-            dissolveMaterial = ScreenFadeImage.GetComponent<Image>().material;
+            dissolveMaterial = canvas.Find("ScreenFadeImage").GetComponent<Image>().material;
             dissolveParameterID = Shader.PropertyToID("_Amount");
 
-            // !!!
-            ScreenFadeImage.enabled = false;
-
-            ScreenFadeImageCanvasGroup = canvas.GetComponent<CanvasGroup>();
+            screenFadeImageCanvasGroup = canvas.GetComponent<CanvasGroup>();
 
             actions = new Action[]
           {
@@ -167,18 +194,16 @@ namespace SweetAndSaltyStudios
             scoreModifierText.text = "SCORE: " + newDistance.ToString("0") + " X";
         }
 
-        public void ScreenFade(float targetAlpha)
-        {
-            if (IsFading == false)
-            {
-                StartCoroutine(IScreenFade(targetAlpha));
-            }
-        }
+        //public void ScreenFade(float targetAlpha)
+        //{
+        //    if (IsFading == false)
+        //    {
+        //        StartCoroutine(IScreenFade(targetAlpha));
+        //    }
+        //}
 
         public void ScreenFadeShader(float targetAlpha)
         {
-            dissolveMaterial.SetFloat(dissolveParameterID, 0f);
-
             if (IsFading == false)
             {
                 StartCoroutine(IScreenFadeShader(targetAlpha));
@@ -192,8 +217,7 @@ namespace SweetAndSaltyStudios
         private IEnumerator IScreenFadeShader(float targetAlpha)
         {
             IsFading = true;
-            ScreenFadeImageCanvasGroup.blocksRaycasts = false;
-            ScreenFadeImage.enabled = true;
+            screenFadeImageCanvasGroup.blocksRaycasts = false;
 
             var currentValue = dissolveMaterial.GetFloat(dissolveParameterID);
             var fadeSpeed = Mathf.Abs(currentValue - targetAlpha) / fadeDuration;
@@ -206,26 +230,25 @@ namespace SweetAndSaltyStudios
             }
 
             IsFading = false;
-            ScreenFadeImageCanvasGroup.blocksRaycasts = true;
-            ScreenFadeImage.enabled = false;
+            screenFadeImageCanvasGroup.blocksRaycasts = true;
         }
 
-        private IEnumerator IScreenFade(float targetAlpha)
-        {
-            IsFading = true;
-            ScreenFadeImageCanvasGroup.blocksRaycasts = true;
+        //private IEnumerator IScreenFade(float targetAlpha)
+        //{
+        //    IsFading = true;
+        //    ScreenFadeImageCanvasGroup.blocksRaycasts = true;
 
-            var fadeSpeed = Mathf.Abs(ScreenFadeImageCanvasGroup.alpha - targetAlpha) / fadeDuration;
+        //    var fadeSpeed = Mathf.Abs(ScreenFadeImageCanvasGroup.alpha - targetAlpha) / fadeDuration;
 
-            while (!Mathf.Approximately(ScreenFadeImageCanvasGroup.alpha, targetAlpha))
-            {
-                ScreenFadeImageCanvasGroup.alpha = Mathf.MoveTowards(ScreenFadeImageCanvasGroup.alpha, targetAlpha, fadeSpeed * Time.unscaledDeltaTime);
-                yield return null;
-            }
+        //    while (!Mathf.Approximately(ScreenFadeImageCanvasGroup.alpha, targetAlpha))
+        //    {
+        //        ScreenFadeImageCanvasGroup.alpha = Mathf.MoveTowards(ScreenFadeImageCanvasGroup.alpha, targetAlpha, fadeSpeed * Time.unscaledDeltaTime);
+        //        yield return null;
+        //    }
 
-            IsFading = false;
-            ScreenFadeImageCanvasGroup.blocksRaycasts = false;
-        }
+        //    IsFading = false;
+        //    ScreenFadeImageCanvasGroup.blocksRaycasts = false;
+        //}
 
         #endregion COROUTINES
 
@@ -238,7 +261,7 @@ namespace SweetAndSaltyStudios
 
         private void GraphicsButton()
         {
-            Instance.ChangePanel(GraphicsPanel);
+            Instance.ChangePanel(SraphicsPanel);
         }
 
         private void HowToPlayButton()
@@ -254,7 +277,7 @@ namespace SweetAndSaltyStudios
         private void StartNewGameButton()
         {
             LevelManager.Instance.StartNewGame();
-            ChangePanel(Instance.HUDPanel);
+            ChangePanel(Instance.HudPanel);
         }
 
         private void OptionsButton()
@@ -294,7 +317,7 @@ namespace SweetAndSaltyStudios
         private void RestartButton()
         {
             LevelManager.Instance.StartNewGame();
-            ChangePanel(Instance.HUDPanel);
+            ChangePanel(Instance.HudPanel);
         }
 
         #endregion BUTTON_ACTIONS

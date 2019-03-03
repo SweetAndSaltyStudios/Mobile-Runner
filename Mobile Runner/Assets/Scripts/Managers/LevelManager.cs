@@ -205,6 +205,16 @@ namespace SweetAndSaltyStudios
 
             yield return new WaitWhile(() => IsSlowingTime);
 
+            // Fadeing...
+
+            UIManager.Instance.ScreenFadeShader(0f);
+
+            yield return new WaitWhile(() => UIManager.Instance.IsFading);
+
+            // Fake loadtime (Show messages like game over or loading...)
+            UIManager.Instance.LoadingText.gameObject.SetActive(true);
+                
+            // Clear level objects
             ObjectPoolManager.Instance.DespawnObject(currentPlayer.gameObject);
 
             do
@@ -216,7 +226,16 @@ namespace SweetAndSaltyStudios
             }
             while (createdPlatforms.Count > 0);
 
+            yield return new WaitForSeconds(2f);
+            UIManager.Instance.LoadingText.gameObject.SetActive(false);
+
             UIManager.Instance.ChangePanel(UIManager.Instance.GameOverPanel);
+
+            UIManager.Instance.ScreenFadeShader(1f);
+
+            yield return new WaitWhile(() => UIManager.Instance.IsFading);
+
+            // Done fading
 
             IsLevelCleared = true;
 
