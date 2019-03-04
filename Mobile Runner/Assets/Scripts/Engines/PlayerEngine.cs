@@ -32,7 +32,6 @@ namespace SweetAndSaltyStudios
 
         private readonly float angularVelocityHitBoost = 8f;
         
-     
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody>();
@@ -45,6 +44,7 @@ namespace SweetAndSaltyStudios
 
             CameraEngine.Instance.CameraTarget = transform;
             currentForwardMovementSpeed = startingForwardMovementSpeed;
+
             canMove = true;
         }
 
@@ -117,7 +117,8 @@ namespace SweetAndSaltyStudios
 
             yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
 
-            LevelManager.Instance.ClearLevel();
+            LevelManager.Instance.SlowTime();
+            LevelManager.Instance.EndGame(UIManager.Instance.GameOverPanel);
 
             yield return null;
         }

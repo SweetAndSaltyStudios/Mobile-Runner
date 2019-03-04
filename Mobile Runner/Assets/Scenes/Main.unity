@@ -357,6 +357,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AccelerationVisualBar: {fileID: 616969264}
   CollectableCountText: {fileID: 1744891029}
+  LoadingText: {fileID: 152673642}
 --- !u!1 &117709262
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,7 +866,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &152673641
 RectTransform:
   m_ObjectHideFlags: 0
