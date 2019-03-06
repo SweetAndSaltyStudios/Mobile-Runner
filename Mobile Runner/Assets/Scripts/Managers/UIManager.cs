@@ -4,6 +4,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace SweetAndSaltyStudios
 {
@@ -11,78 +12,41 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
+        [Header("Main variables")]
+        public UIScreen StartingScreen;
+
+        [Header("Scene start & end events")]
+        public UnityEvent OnSceneStart = new UnityEvent();
+        public UnityEvent OnSceneEnd = new UnityEvent();
+
+        [Header("Screen events")]
+        public UnityEvent OnScreenSwitched = new UnityEvent();
+
         private Material dissolveMaterial;
         private int dissolveParameterID;
-
-        private Action[] actions;
 
         public Scrollbar AccelerationVisualBar;
         public TextMeshProUGUI CollectableCountText;
         public TextMeshProUGUI LoadingText;
 
         private CanvasGroup screenFadeImageCanvasGroup;
-        private TextMeshProUGUI scoreModifierText;
+        public TextMeshProUGUI ScoreModifierText;
 
-        private readonly float fadeDuration = 1f;
-        private readonly float fakeLoadTime = 0.5f;
+        private readonly float fadeDuration = 0.4f;
+        private readonly float fakeLoadTime = 2f;
+        private readonly float sceneStartTime = 1f;
 
         #endregion VARIABLES
 
         #region PROPERTIES
 
-        public MainMenuPanel MainMenuPanel
-        {
-            get;
-            private set;
-        }
-        public PausePanel PausePanel
-        {
-            get;
-            private set;
-        }
-        public GameOverPanel GameOverPanel
-        {
-            get;
-            private set;
-        }
-        public HUDPanel HudPanel
+        public UIScreen CurrentUIScreen
         {
             get;
             private set;
         }
 
-        public OptionsPanel OptionsPanel
-        {
-            get;
-            private set;
-        }
-        public AudioPanel AudioPanel
-        {
-            get;
-            private set;
-        }
-        public GraphicsPanel GraphicsPanel
-        {
-            get;
-            private set;
-        }
-        public SocialPanel SocialPanel
-        {
-            get;
-            private set;
-        }
-        public HowToPlayPanel HowToPlayPanel
-        {
-            get;
-            private set;
-        }
-
-        public UIPanel CurrentPanel
-        {
-            get;
-            private set;
-        }
-        public UIPanel PreviousPanel
+        public UIScreen PreviousUIScreen
         {
             get;
             private set;
@@ -106,10 +70,7 @@ namespace SweetAndSaltyStudios
         private void Start()
         {
             dissolveMaterial.SetFloat(dissolveParameterID, 0f);
-
-            Invoke("OnStart", 1f);
-
-            ChangePanel(MainMenuPanel);
+            Invoke("OnStart", sceneStartTime);
         }
 
         private void Update()
@@ -128,68 +89,12 @@ namespace SweetAndSaltyStudios
         private void Initialize()
         {
             var canvas = transform.GetChild(0);
-            var panels = canvas.Find("Panels");
-
-            MainMenuPanel = panels.Find("MainMenuPanel").GetComponent<MainMenuPanel>();
-            PausePanel = panels.Find("PausePanel").GetComponent<PausePanel>();
-            GameOverPanel = panels.Find("GameOverPanel").GetComponent<GameOverPanel>();
-
-            OptionsPanel = panels.Find("OptionsPanel").GetComponent<OptionsPanel>();
-            AudioPanel = panels.Find("AudioPanel").GetComponent<AudioPanel>();
-            GraphicsPanel = panels.Find("GraphicsPanel").GetComponent<GraphicsPanel>();
-            SocialPanel = panels.Find("SocialPanel").GetComponent<SocialPanel>();
-            HowToPlayPanel = panels.Find("HowToPlayPanel").GetComponent<HowToPlayPanel>();
-           
-            HudPanel = panels.Find("HUDPanel").GetComponent<HUDPanel>();
-
-            scoreModifierText = HudPanel.transform.Find("InfoContainer").Find("ScoreModifierText").GetComponent<TextMeshProUGUI>();
+            var UIScreenContainer = canvas.Find("UIScreenContainer");
 
             dissolveMaterial = canvas.Find("ScreenFadeImage").GetComponent<Image>().material;
             dissolveParameterID = Shader.PropertyToID("_Amount");
 
             screenFadeImageCanvasGroup = canvas.GetComponent<CanvasGroup>();
-
-            actions = new Action[]
-          {
-                new Action(AudioButton),
-                new Action(GraphicsButton),
-                new Action(HowToPlayButton),
-                new Action(PauseButton),
-                new Action(StartNewGameButton),
-                new Action(OptionsButton),
-                new Action(SocialButton),
-                new Action(QuitButton),
-                new Action(BackButton),
-                new Action(RestartButton)
-          };         
-        }
-
-        public Action GetButtonAction(string actionName)
-        {
-            for (int i = 0; i < actions.Length; i++)
-            {
-                if (actions[i].Method.Name == actionName)
-                {
-                    return actions[i];
-                }
-            }
-
-            Debug.LogError("!!!");
-            return null;
-        }
-
-        public void ChangePanel(UIPanel newPanel)
-        {
-            if (CurrentPanel != null)
-            {
-                PreviousPanel = CurrentPanel;
-
-                CurrentPanel.Close();
-            }
-
-            CurrentPanel = newPanel;
-
-            CurrentPanel.Open();
         }
 
         public void UpdateCollectableCount(int newAmount)
@@ -199,18 +104,10 @@ namespace SweetAndSaltyStudios
 
         public void UpdateScoreModifier(float newDistance)
         {
-            scoreModifierText.text = "SCORE: " + newDistance.ToString("0") + " X";
+            ScoreModifierText.text = "SCORE: " + newDistance.ToString("0") + " X";
         }
 
-        //public void ScreenFade(float targetAlpha)
-        //{
-        //    if (IsFading == false)
-        //    {
-        //        StartCoroutine(IScreenFade(targetAlpha));
-        //    }
-        //}
-
-        private void ScreenFadeShader(float targetAlpha)
+        public void ScreenFade(float targetAlpha)
         {
             if (IsFading == false)
             {
@@ -218,19 +115,10 @@ namespace SweetAndSaltyStudios
             }
         }
 
-        public void FadeInAndOut(bool startFadingToBlack, Func<bool> functionBetweenFades = null)
-        {
-            functionBetweenFades = functionBetweenFades ?? (() => true); 
-
-            if (IsFading == false)
-            {
-                StartCoroutine(IFadeScreeInAndOut(startFadingToBlack, functionBetweenFades));
-            }
-        }
-
         private void OnStart()
         {
-            ScreenFadeShader(1f);
+            OnSceneStart.Invoke();
+            SwitchScreens(StartingScreen);
         }
 
         private void OnQuit()
@@ -245,6 +133,42 @@ namespace SweetAndSaltyStudios
             Application.Quit();
 
 #endif
+        }
+
+        public void SwitchScreens(UIScreen newScreen)
+        {
+            if (newScreen)
+            {
+                if (CurrentUIScreen)
+                {
+                    CurrentUIScreen.CloseScreen();
+                    PreviousUIScreen = CurrentUIScreen;
+                }
+
+                CurrentUIScreen = newScreen;
+                CurrentUIScreen.OpenScreen();
+
+                OnScreenSwitched.Invoke();
+            }
+        }
+
+        public void SwitchPreviousScreen()
+        {
+            if (PreviousUIScreen)
+            {
+                SwitchScreens(PreviousUIScreen);
+            }
+        }
+
+        public void QuitGame()
+        {
+            OnSceneEnd.Invoke();
+            Invoke( "OnQuit", sceneStartTime);
+        }
+
+        public void CrossFade()
+        {
+            StartCoroutine(ICrossFade());
         }
 
         #endregion CUSTOM_FUNCTIONS
@@ -270,110 +194,20 @@ namespace SweetAndSaltyStudios
             screenFadeImageCanvasGroup.blocksRaycasts = true;
         }
 
-        private IEnumerator IFadeScreeInAndOut(bool startFadingToBlack, Func<bool> functionBetweenFades)
+        private IEnumerator ICrossFade()
         {
-            ScreenFadeShader(startFadingToBlack ? 0f : 1f);
-
+            ScreenFade(0f);
             yield return new WaitWhile(() => IsFading);
 
             LoadingText.gameObject.SetActive(true);
-
-            yield return new WaitUntil(functionBetweenFades);
-            
             yield return new WaitForSeconds(fakeLoadTime);
-
             LoadingText.gameObject.SetActive(false);
-            ScreenFadeShader(startFadingToBlack ? 1f : 0f);
+
+            ScreenFade(1f);
+            yield return new WaitWhile(() => IsFading);
+
         }
-
-        //private IEnumerator IScreenFade(float targetAlpha)
-        //{
-        //    IsFading = true;
-        //    ScreenFadeImageCanvasGroup.blocksRaycasts = true;
-
-        //    var fadeSpeed = Mathf.Abs(ScreenFadeImageCanvasGroup.alpha - targetAlpha) / fadeDuration;
-
-        //    while (!Mathf.Approximately(ScreenFadeImageCanvasGroup.alpha, targetAlpha))
-        //    {
-        //        ScreenFadeImageCanvasGroup.alpha = Mathf.MoveTowards(ScreenFadeImageCanvasGroup.alpha, targetAlpha, fadeSpeed * Time.unscaledDeltaTime);
-        //        yield return null;
-        //    }
-
-        //    IsFading = false;
-        //    ScreenFadeImageCanvasGroup.blocksRaycasts = false;
-        //}
 
         #endregion COROUTINES
-
-        #region BUTTON_ACTIONS
-
-        private void AudioButton()
-        {
-            Instance.ChangePanel(Instance.AudioPanel);
-        }
-
-        private void GraphicsButton()
-        {
-            Instance.ChangePanel(GraphicsPanel);
-        }
-
-        private void HowToPlayButton()
-        {
-            Instance.ChangePanel(Instance.HowToPlayPanel);
-        }
-
-        private void PauseButton()
-        {
-            ChangePanel(PausePanel);
-        }
-
-        private void StartNewGameButton()
-        {
-            LevelManager.Instance.StartGame();
-        }
-
-        private void OptionsButton()
-        {
-            ChangePanel(Instance.OptionsPanel);
-        }
-
-        private void SocialButton()
-        {
-           ChangePanel(Instance.SocialPanel);
-        }
-
-        private void QuitButton()
-        {
-            ScreenFadeShader(0f);
-
-            Invoke("OnQuit", 1f);
-        }   
-
-        private void BackButton()
-        {
-            if (CurrentPanel.Equals(PausePanel))
-            {
-                LevelManager.Instance.EndGame(MainMenuPanel);
-            }
-            else if (CurrentPanel.Equals(GameOverPanel))
-            {
-                ChangePanel(MainMenuPanel);
-            }
-            else if (CurrentPanel.Equals(OptionsPanel))
-            {
-                ChangePanel(MainMenuPanel);
-            }
-            else
-            {
-                ChangePanel(PreviousPanel);
-            }
-        }
-
-        private void RestartButton()
-        {
-            LevelManager.Instance.StartGame();
-        }
-
-        #endregion BUTTON_ACTIONS
     }
 }

@@ -1,13 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-public enum GAME_STATE
-{
-    MAIN_MENU,
-    IN_GAME,
-    PAUSED,
-    GAME_OVER
-}
+﻿using UnityEngine;
 
 namespace SweetAndSaltyStudios
 {
@@ -21,10 +12,16 @@ namespace SweetAndSaltyStudios
 
         #region PROPERTIES
 
-        public GAME_STATE CurrentGameState
-        {
-            get;
-            private set;
+        public float CurrentTimeScale
+        {          
+            get
+            {
+                return Time.timeScale;
+            }
+            private set
+            {
+                Time.timeScale = value;
+            }
         }
 
         #endregion PROPERTIES
@@ -45,32 +42,9 @@ namespace SweetAndSaltyStudios
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
         }
 
-        public void ChangeGameState(GAME_STATE newGameState)
+        public void ChangeTimeScale(float newTimeScale)
         {
-            CurrentGameState = newGameState;
-
-            switch (CurrentGameState)
-            {
-                case GAME_STATE.MAIN_MENU:
-
-                    break;
-
-                case GAME_STATE.IN_GAME:
-
-                    break;
-
-                case GAME_STATE.PAUSED:
-
-                    break;
-
-                case GAME_STATE.GAME_OVER:
-
-                    break;
-
-                default:
-
-                    break;
-            }
+            CurrentTimeScale = newTimeScale;
         }
 
         #endregion CUSTOM_FUNCTIONS

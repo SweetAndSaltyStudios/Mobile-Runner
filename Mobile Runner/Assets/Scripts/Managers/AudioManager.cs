@@ -10,7 +10,7 @@ public class AudioManager : Singelton<AudioManager>
     public AudioClip[] MusicTracks;
     public AudioClip[] SoundEffects;
 
-    private AudioSource audioSource;
+    private AudioSource musicTrackSource;
 
     #endregion VARIABLES
 
@@ -38,14 +38,14 @@ public class AudioManager : Singelton<AudioManager>
 
     private void Initialize()
     {
-        audioSource = GetComponent<AudioSource>();
+        musicTrackSource = transform.GetChild(0).GetComponent<AudioSource>();
     }
 
     private void PlayMusickTrack()
     {
-        audioSource.clip = MusicTracks[Random.Range(0, MusicTracks.Length)];
-        audioSource.loop = true;
-        audioSource.Play();
+        musicTrackSource.clip = MusicTracks[Random.Range(0, MusicTracks.Length)];
+        musicTrackSource.loop = true;
+        musicTrackSource.Play();
     }
 
     public void PlaySfxAtPoint(string effectName, Vector3 position)

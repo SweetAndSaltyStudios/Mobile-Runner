@@ -1,12 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace SweetAndSaltyStudios
 {
+    public enum LEVEL_STATE
+    {
+        START,
+        RUNNING,
+        PAUSED,
+        END
+    }
+
     public class LevelManager : Singelton<LevelManager>
     {
         #region VARIABLES
+
+        private LEVEL_STATE CurrentLevelState;
+
+        [Header("Level events")]
+        public UnityEvent OnLevelStart = new UnityEvent();
+        public UnityEvent OnLevelEnd = new UnityEvent();
 
         private Queue<GameObject> createdPlatforms = new Queue<GameObject>();
         private PlayerEngine currentPlayer;
@@ -17,10 +32,12 @@ namespace SweetAndSaltyStudios
         private readonly float platformLenght = 30f;
         private readonly float safeZone = 30.0f;
         private readonly float slowModifier = 2f;
-        private readonly int amountOfTilesOnScreen = 10;
+        private readonly int amountOfTilesOnScreen = 2;
 
         private int lastPlatformIndex = 0;
         private int collectableCount;
+
+        private bool isLevelCreated;
 
         #endregion VARIABLES
 
@@ -48,14 +65,7 @@ namespace SweetAndSaltyStudios
 
         private void Awake()
         {
-            var levelParent = new GameObject("Level").transform;
-            levelParent.SetParent(transform);
-
-            PlatformParent = new GameObject("Platforms").transform;
-            PlatformParent.SetParent(levelParent);
-
-            OthersParent = new GameObject("Others").transform;
-            OthersParent.SetParent(levelParent);
+            Initialize();
         }
 
         private void Update()
@@ -76,6 +86,18 @@ namespace SweetAndSaltyStudios
 
         #region CUSTOM_FUNCTIONS
 
+        private void Initialize()
+        {
+            var levelParent = new GameObject("Level").transform;
+            levelParent.SetParent(transform);
+
+            PlatformParent = new GameObject("Platforms").transform;
+            PlatformParent.SetParent(levelParent);
+
+            OthersParent = new GameObject("Others").transform;
+            OthersParent.SetParent(levelParent);
+        }
+
         private int RandomPlatformIndex()
         {
             if (ResourceManager.Instance.PlatformPrefabs.Length <= 1)
@@ -94,11 +116,9 @@ namespace SweetAndSaltyStudios
             return randomIndex;
         }
 
-        public void StartGame()
+        public void StartLevel()
         {
-
             StartCoroutine(IStartLevel());
-            
         }
 
         private void SpawnPlatform(int platformIndex = -1)
@@ -146,9 +166,11 @@ namespace SweetAndSaltyStudios
             UIManager.Instance.UpdateCollectableCount(collectableCount);
         }
 
-        public void EndGame(UIPanel showPanel)
+        public void EndGame()
         {
-            StartCoroutine(IEndGame(showPanel));          
+            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
+            StartCoroutine(ISlowTime(slowModifier));
+            StartCoroutine(IEndGame());          
         }
 
         public void SlowTime()
@@ -159,7 +181,6 @@ namespace SweetAndSaltyStudios
 
         private bool ClearAllLevelObjects()
         {
-            // Clear level objects
             ObjectPoolManager.Instance.DespawnObject(currentPlayer.gameObject);
 
             do
@@ -191,6 +212,15 @@ namespace SweetAndSaltyStudios
             }
         }
 
+        private void CreatePlayer()
+        {
+            currentPlayer = ObjectPoolManager.Instance.SpawnObject(
+              ResourceManager.Instance.PlayerPrefab,
+              new Vector3(0, 0.6f, 0),
+              Quaternion.identity,
+              OthersParent).GetComponent<PlayerEngine>();
+        }
+
         #endregion CUSTOM_FUNCTIONS
 
         #region COROUTINES
@@ -212,32 +242,24 @@ namespace SweetAndSaltyStudios
 
         private IEnumerator IStartLevel()
         {
-            yield return new WaitWhile(() => IsSlowingTime);
-
-            UIManager.Instance.FadeInAndOut(true);
+            UIManager.Instance.CrossFade();
 
             yield return new WaitWhile(() => UIManager.Instance.IsFading);
-
-            UIManager.Instance.ChangePanel(UIManager.Instance.HudPanel);
 
             CreateStartingPlatforms();
+            CreatePlayer();    
 
-            currentPlayer = ObjectPoolManager.Instance.SpawnObject(
-                ResourceManager.Instance.PlayerPrefab,
-                new Vector3(0, 0.6f, 0),
-                Quaternion.identity,
-                OthersParent).GetComponent<PlayerEngine>();
+            yield return null;
         }
 
-        private IEnumerator IEndGame(UIPanel showPanel)
+        private IEnumerator IEndGame()
         {
+            yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
             yield return new WaitWhile(() => IsSlowingTime);
 
-            UIManager.Instance.FadeInAndOut(true, ClearAllLevelObjects);
+            ClearAllLevelObjects();
 
-            yield return new WaitWhile(() => UIManager.Instance.IsFading);
-
-            UIManager.Instance.ChangePanel(showPanel);
+            OnLevelEnd.Invoke();
 
             yield return null;
         }   

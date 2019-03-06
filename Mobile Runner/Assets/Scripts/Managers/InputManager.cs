@@ -7,11 +7,27 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
+        private EventSystem currentEventSystem;
         private readonly bool isFlat = true;
 
         #endregion VARIABLES
 
         #region PROPERTIES
+
+        public GameObject SetSelectedObject
+        {
+            set
+            {
+                currentEventSystem.SetSelectedGameObject(value);
+            }               
+        }
+        public GameObject CurrentSelectable
+        {
+            get
+            {
+                return currentEventSystem.currentSelectedGameObject;
+            }
+        }
 
         public Vector3 Tilt
         {
@@ -61,7 +77,7 @@ namespace SweetAndSaltyStudios
         {
             get
             {
-                return !EventSystem.current.IsPointerOverGameObject();
+                return !currentEventSystem.IsPointerOverGameObject();
             }
         }
 
@@ -69,7 +85,11 @@ namespace SweetAndSaltyStudios
 
         #region UNITY_FUNCTIONS
 
-      
+        private void Awake()
+        {
+            currentEventSystem = EventSystem.current;
+        }
+
         #endregion UNITY_FUNCTIONS
 
         #region CUSTOM_FUNCTIONS

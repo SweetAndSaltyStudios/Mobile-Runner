@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SweetAndSaltyStudios
 {
@@ -8,8 +7,6 @@ namespace SweetAndSaltyStudios
     {
         private const float MAX_SPEED_LIMIT = 200f;
         private const float FORWARD_SPEED_INCREMENT_MODIFIER = 0.1f;
-
-        private Coroutine iDie;
 
         public Vector3 PlayerPosition
         {
@@ -39,9 +36,6 @@ namespace SweetAndSaltyStudios
 
         private void OnEnable()
         {
-            if (iDie != null)
-                iDie = null;
-
             CameraEngine.Instance.CameraTarget = transform;
             currentForwardMovementSpeed = startingForwardMovementSpeed;
 
@@ -76,8 +70,6 @@ namespace SweetAndSaltyStudios
         {
             if (canMove)
             {
-                //  rigidbody.MovePosition(PlayerPosition + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime);
-
                 rigidbody.position = rigidbody.position + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime;
                 rigidbody.position = new Vector3(Mathf.Clamp(rigidbody.position.x, -4, 4), rigidbody.position.y, rigidbody.position.z);
             }
@@ -87,8 +79,6 @@ namespace SweetAndSaltyStudios
         {
             if (collision.gameObject.layer.Equals(10))
             {
-                Debug.LogWarning("Collision Enter: Hit " + collision.gameObject.name);
-
                 AudioManager.Instance.PlaySfxAtPoint("Crash", PlayerPosition);
 
                 Die();
@@ -101,26 +91,13 @@ namespace SweetAndSaltyStudios
 
             rigidbody.angularVelocity *= angularVelocityHitBoost;
 
-            if (iDie == null)
-            iDie = StartCoroutine(IDie());
+            LevelManager.Instance.EndGame();
         }
 
         public void IncreaseMovementSpeed()
         {
             var newForwardSpeed = currentForwardMovementSpeed + FORWARD_SPEED_INCREMENT_MODIFIER;
             currentForwardMovementSpeed = newForwardSpeed < MAX_SPEED_LIMIT ? newForwardSpeed : MAX_SPEED_LIMIT;
-        }
-
-        private IEnumerator IDie()
-        {
-            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
-
-            yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
-
-            LevelManager.Instance.SlowTime();
-            LevelManager.Instance.EndGame(UIManager.Instance.GameOverPanel);
-
-            yield return null;
         }
     }
 }
