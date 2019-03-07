@@ -38,8 +38,6 @@ namespace SweetAndSaltyStudios
         {
             CameraEngine.Instance.CameraTarget = transform;
             currentForwardMovementSpeed = startingForwardMovementSpeed;
-
-            canMove = true;
         }
 
         private void OnDisable()
@@ -53,6 +51,8 @@ namespace SweetAndSaltyStudios
 
         private void Update()
         {
+            canMove = LevelManager.Instance.CurrentLevelState.Equals(LEVEL_STATE.RUNNING);
+
             if (canMove)
             {
                 horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;

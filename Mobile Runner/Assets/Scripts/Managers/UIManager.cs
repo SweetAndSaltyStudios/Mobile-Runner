@@ -166,9 +166,17 @@ namespace SweetAndSaltyStudios
             Invoke( "OnQuit", sceneStartTime);
         }
 
-        public void CrossFade()
+        public void CrossFade(Func<bool> func = null)
         {
-            StartCoroutine(ICrossFade());
+            if (func == null)
+            {
+                func = () => true;
+            }
+
+            if (IsFading == false)
+            {
+                StartCoroutine(ICrossFade(func));
+            }
         }
 
         #endregion CUSTOM_FUNCTIONS
@@ -194,18 +202,22 @@ namespace SweetAndSaltyStudios
             screenFadeImageCanvasGroup.blocksRaycasts = true;
         }
 
-        private IEnumerator ICrossFade()
+        private IEnumerator ICrossFade(Func<bool> func)
         {
             ScreenFade(0f);
             yield return new WaitWhile(() => IsFading);
 
             LoadingText.gameObject.SetActive(true);
+
+            yield return new WaitUntil(func);
+
+            Debug.LogError("FOO");
+
             yield return new WaitForSeconds(fakeLoadTime);
             LoadingText.gameObject.SetActive(false);
 
             ScreenFade(1f);
             yield return new WaitWhile(() => IsFading);
-
         }
 
         #endregion COROUTINES

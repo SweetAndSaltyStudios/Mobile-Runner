@@ -17,8 +17,6 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
-        private LEVEL_STATE CurrentLevelState;
-
         [Header("Level events")]
         public UnityEvent OnLevelStart = new UnityEvent();
         public UnityEvent OnLevelEnd = new UnityEvent();
@@ -36,8 +34,6 @@ namespace SweetAndSaltyStudios
 
         private int lastPlatformIndex = 0;
         private int collectableCount;
-
-        private bool isLevelCreated;
 
         #endregion VARIABLES
 
@@ -59,6 +55,8 @@ namespace SweetAndSaltyStudios
             private set;
         }
 
+        public LEVEL_STATE CurrentLevelState;
+
         #endregion PROPERTIES
 
         #region UNITY_FUNCTIONS
@@ -70,8 +68,13 @@ namespace SweetAndSaltyStudios
 
         private void Update()
         {
-            if (currentPlayer == null)
+            if (CurrentLevelState.Equals(LEVEL_STATE.RUNNING) == false)
                 return;
+
+            //if (CurrentLevelState.Equals(LEVEL_STATE.START) && InputManager.Instance.FirstTouch)
+            //{
+            //    ChangeLevelState(LEVEL_STATE.RUNNING);
+            //}
 
             if (currentPlayer.PlayerPosition.z - safeZone > (spawnZ - amountOfTilesOnScreen * platformLenght))
             {
@@ -153,6 +156,83 @@ namespace SweetAndSaltyStudios
             ObjectPoolManager.Instance.DespawnObject(createdPlatforms.Dequeue());
         }
 
+        private bool CreateLevelStartingObjects()
+        {
+            spawnZ = 0;
+
+            for (int i = 0; i < amountOfTilesOnScreen; i++)
+            {
+                if (i < 2)
+                {
+                    SpawnPlatform(0);
+                }
+                else
+                {
+                    SpawnPlatform();
+                }
+            }
+
+            currentPlayer = ObjectPoolManager.Instance.SpawnObject(
+              ResourceManager.Instance.PlayerPrefab,
+              new Vector3(0, 0.6f, 0),
+              Quaternion.identity,
+              OthersParent).GetComponent<PlayerEngine>();
+
+            return true;
+        }
+
+        private bool ClearAllLevelObjects()
+        {
+            ObjectPoolManager.Instance.DespawnObject(currentPlayer.gameObject);
+
+            do
+            {
+                if (createdPlatforms != null)
+                {
+                    DespawnPlatform();
+                }
+            }
+            while (createdPlatforms.Count > 0);
+
+            return true;
+        }
+
+        public void ChangeLevelState(LEVEL_STATE newState)
+        {
+            CurrentLevelState = newState;
+
+            switch (CurrentLevelState)
+            {
+                case LEVEL_STATE.START:
+
+                    UIManager.Instance.CrossFade(CreateLevelStartingObjects);
+
+                    OnLevelStart.Invoke();
+
+                    break;
+
+                case LEVEL_STATE.RUNNING:
+
+                    break;
+
+                case LEVEL_STATE.PAUSED:
+
+                    break;
+
+                case LEVEL_STATE.END:
+
+                    UIManager.Instance.CrossFade(ClearAllLevelObjects);
+
+                    OnLevelEnd.Invoke();
+
+                    break;
+
+                default:
+
+                    break;
+            }
+        }
+
         public void UpdateScoreModifier(float modifierAmount)
         {
             scoreModifier += modifierAmount;
@@ -179,48 +259,6 @@ namespace SweetAndSaltyStudios
                 StartCoroutine(ISlowTime(slowModifier));
         }
 
-        private bool ClearAllLevelObjects()
-        {
-            ObjectPoolManager.Instance.DespawnObject(currentPlayer.gameObject);
-
-            do
-            {
-                if (createdPlatforms != null)
-                {
-                    DespawnPlatform();
-                }
-            }
-            while (createdPlatforms.Count > 0);
-
-            return true;
-        }
-
-        private void CreateStartingPlatforms()
-        {
-            spawnZ = 0;
-
-            for (int i = 0; i < amountOfTilesOnScreen; i++)
-            {
-                if (i < 2)
-                {
-                    SpawnPlatform(0);
-                }
-                else
-                {
-                    SpawnPlatform();
-                }
-            }
-        }
-
-        private void CreatePlayer()
-        {
-            currentPlayer = ObjectPoolManager.Instance.SpawnObject(
-              ResourceManager.Instance.PlayerPrefab,
-              new Vector3(0, 0.6f, 0),
-              Quaternion.identity,
-              OthersParent).GetComponent<PlayerEngine>();
-        }
-
         #endregion CUSTOM_FUNCTIONS
 
         #region COROUTINES
@@ -242,24 +280,21 @@ namespace SweetAndSaltyStudios
 
         private IEnumerator IStartLevel()
         {
-            UIManager.Instance.CrossFade();
+            ChangeLevelState(LEVEL_STATE.START);
 
-            yield return new WaitWhile(() => UIManager.Instance.IsFading);
-
-            CreateStartingPlatforms();
-            CreatePlayer();    
+            yield return new WaitWhile(() => CurrentLevelState.Equals(LEVEL_STATE.START));
 
             yield return null;
         }
 
         private IEnumerator IEndGame()
         {
+            ChangeLevelState(LEVEL_STATE.END);
+
             yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
             yield return new WaitWhile(() => IsSlowingTime);
 
-            ClearAllLevelObjects();
-
-            OnLevelEnd.Invoke();
+          
 
             yield return null;
         }   
