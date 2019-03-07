@@ -12,18 +12,6 @@ namespace SweetAndSaltyStudios
 
         #region PROPERTIES
 
-        public float CurrentTimeScale
-        {          
-            get
-            {
-                return Time.timeScale;
-            }
-            private set
-            {
-                Time.timeScale = value;
-            }
-        }
-
         #endregion PROPERTIES
 
         #region UNITY_FUNCTIONS
@@ -40,11 +28,6 @@ namespace SweetAndSaltyStudios
         private void Initialize()
         {
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
-        }
-
-        public void ChangeTimeScale(float newTimeScale)
-        {
-            CurrentTimeScale = newTimeScale;
         }
 
         #endregion CUSTOM_FUNCTIONS

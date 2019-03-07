@@ -8,8 +8,8 @@ namespace SweetAndSaltyStudios
     public enum LEVEL_STATE
     {
         START,
+        PAUSE,
         RUNNING,
-        PAUSED,
         END
     }
 
@@ -17,9 +17,16 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
+        public LEVEL_STATE CurrentLevelState
+        {
+            get;
+            private set;
+        }
+
         [Header("Level events")]
         public UnityEvent OnLevelStart = new UnityEvent();
         public UnityEvent OnLevelEnd = new UnityEvent();
+        public UnityEvent OnLevelPaused = new UnityEvent();
 
         private Queue<GameObject> createdPlatforms = new Queue<GameObject>();
         private PlayerEngine currentPlayer;
@@ -49,13 +56,33 @@ namespace SweetAndSaltyStudios
             get;
             private set;
         }
+
         public bool IsSlowingTime
         {
             get;
             private set;
         }
-
-        public LEVEL_STATE CurrentLevelState;
+        public bool WaitForTap
+        {
+            get
+            {
+                return InputManager.Instance.FirstTouch;
+            }
+        }
+        public bool IsPaused;
+     
+        public float CurrentTimeScale
+        {
+            get
+            {
+                return Time.timeScale;
+            }
+        }
+        public float LastTimeScale
+        {
+            get;
+            private set;
+        }
 
         #endregion PROPERTIES
 
@@ -66,15 +93,15 @@ namespace SweetAndSaltyStudios
             Initialize();
         }
 
+        private void Start()
+        {
+            CurrentLevelState = LEVEL_STATE.PAUSE;
+        }
+
         private void Update()
         {
-            if (CurrentLevelState.Equals(LEVEL_STATE.RUNNING) == false)
+            if (currentPlayer == null)
                 return;
-
-            //if (CurrentLevelState.Equals(LEVEL_STATE.START) && InputManager.Instance.FirstTouch)
-            //{
-            //    ChangeLevelState(LEVEL_STATE.RUNNING);
-            //}
 
             if (currentPlayer.PlayerPosition.z - safeZone > (spawnZ - amountOfTilesOnScreen * platformLenght))
             {
@@ -122,6 +149,32 @@ namespace SweetAndSaltyStudios
         public void StartLevel()
         {
             StartCoroutine(IStartLevel());
+        }
+
+        public void EndLevel()
+        {
+            StartCoroutine(IEndLevel());
+        }
+
+        private void PauseLevel()
+        {
+            IsPaused = !IsPaused;
+
+            if (IsPaused)
+            {
+                ChangeTimeScale(0f);
+            }
+            else
+            {
+                ChangeTimeScale(LastTimeScale);
+            }
+        }
+
+        private void ChangeTimeScale(float newTimeScale)
+        {
+            LastTimeScale = CurrentTimeScale;
+
+            Time.timeScale = newTimeScale;
         }
 
         private void SpawnPlatform(int platformIndex = -1)
@@ -197,42 +250,6 @@ namespace SweetAndSaltyStudios
             return true;
         }
 
-        public void ChangeLevelState(LEVEL_STATE newState)
-        {
-            CurrentLevelState = newState;
-
-            switch (CurrentLevelState)
-            {
-                case LEVEL_STATE.START:
-
-                    UIManager.Instance.CrossFade(CreateLevelStartingObjects);
-
-                    OnLevelStart.Invoke();
-
-                    break;
-
-                case LEVEL_STATE.RUNNING:
-
-                    break;
-
-                case LEVEL_STATE.PAUSED:
-
-                    break;
-
-                case LEVEL_STATE.END:
-
-                    UIManager.Instance.CrossFade(ClearAllLevelObjects);
-
-                    OnLevelEnd.Invoke();
-
-                    break;
-
-                default:
-
-                    break;
-            }
-        }
-
         public void UpdateScoreModifier(float modifierAmount)
         {
             scoreModifier += modifierAmount;
@@ -246,17 +263,50 @@ namespace SweetAndSaltyStudios
             UIManager.Instance.UpdateCollectableCount(collectableCount);
         }
 
-        public void EndGame()
-        {
-            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
-            StartCoroutine(ISlowTime(slowModifier));
-            StartCoroutine(IEndGame());          
-        }
-
         public void SlowTime()
         {
             if (IsSlowingTime == false)
                 StartCoroutine(ISlowTime(slowModifier));
+        }
+
+        private void ChangeLevelState(LEVEL_STATE newLevelState)
+        {
+            CurrentLevelState = newLevelState;
+
+            switch (CurrentLevelState)
+            {
+                case LEVEL_STATE.START:
+
+                    //StartLevel();
+
+                    OnLevelStart.Invoke();
+
+                    break;
+
+                case LEVEL_STATE.PAUSE:
+
+                    PauseLevel();
+
+                    OnLevelPaused.Invoke();
+
+                    break;
+
+                case LEVEL_STATE.RUNNING:
+
+                    break;
+
+                case LEVEL_STATE.END:
+
+                    EndLevel();
+
+                    OnLevelEnd.Invoke();
+
+                    break;
+
+                default:
+
+                    break;
+            }
         }
 
         #endregion CUSTOM_FUNCTIONS
@@ -281,23 +331,14 @@ namespace SweetAndSaltyStudios
         private IEnumerator IStartLevel()
         {
             ChangeLevelState(LEVEL_STATE.START);
-
-            yield return new WaitWhile(() => CurrentLevelState.Equals(LEVEL_STATE.START));
-
-            yield return null;
+            yield return new WaitUntil(() => CreateLevelStartingObjects());
         }
 
-        private IEnumerator IEndGame()
+        private IEnumerator IEndLevel()
         {
             ChangeLevelState(LEVEL_STATE.END);
-
-            yield return new WaitWhile(() => CameraEngine.Instance.IsShaking);
-            yield return new WaitWhile(() => IsSlowingTime);
-
-          
-
-            yield return null;
-        }   
+            yield return new WaitUntil(() => ClearAllLevelObjects());
+        }
 
         #endregion COROUTINES       
     }

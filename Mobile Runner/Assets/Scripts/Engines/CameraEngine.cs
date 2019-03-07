@@ -4,6 +4,7 @@ using UnityEngine;
 public class CameraEngine : Singelton<CameraEngine>
 {
     private Transform currentCameraTarget;
+    public float offset;
     private float camerasZOffset;
 
     public bool IsShaking
@@ -47,6 +48,12 @@ public class CameraEngine : Singelton<CameraEngine>
     public void Shake(float duration, float magnitude)
     {
         StartCoroutine(IShake(duration, magnitude));
+    }
+
+    private IEnumerator Foo(Vector3 targetPosition)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, 20f * Time.deltaTime);
+        yield return null;
     }
 
     private IEnumerator IShake(float duration, float magnitude)

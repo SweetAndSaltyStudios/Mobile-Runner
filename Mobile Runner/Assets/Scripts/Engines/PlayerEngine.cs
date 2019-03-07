@@ -51,8 +51,6 @@ namespace SweetAndSaltyStudios
 
         private void Update()
         {
-            canMove = LevelManager.Instance.CurrentLevelState.Equals(LEVEL_STATE.RUNNING);
-
             if (canMove)
             {
                 horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;
@@ -91,7 +89,9 @@ namespace SweetAndSaltyStudios
 
             rigidbody.angularVelocity *= angularVelocityHitBoost;
 
-            LevelManager.Instance.EndGame();
+            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
+            LevelManager.Instance.SlowTime();
+            //LevelManager.Instance.EndLevel();
         }
 
         public void IncreaseMovementSpeed()

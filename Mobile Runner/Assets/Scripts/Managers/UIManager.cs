@@ -95,6 +95,13 @@ namespace SweetAndSaltyStudios
             dissolveParameterID = Shader.PropertyToID("_Amount");
 
             screenFadeImageCanvasGroup = canvas.GetComponent<CanvasGroup>();
+
+            var uiScreens = FindObjectsOfType<UIScreen>();
+
+            for (int i = 0; i < uiScreens.Length; i++)
+            {
+                uiScreens[i].gameObject.SetActive(false);
+            }
         }
 
         public void UpdateCollectableCount(int newAmount)
@@ -163,7 +170,7 @@ namespace SweetAndSaltyStudios
         public void QuitGame()
         {
             OnSceneEnd.Invoke();
-            Invoke( "OnQuit", sceneStartTime);
+            Invoke("OnQuit", sceneStartTime);
         }
 
         public void CrossFade(Func<bool> func = null)
@@ -210,8 +217,6 @@ namespace SweetAndSaltyStudios
             LoadingText.gameObject.SetActive(true);
 
             yield return new WaitUntil(func);
-
-            Debug.LogError("FOO");
 
             yield return new WaitForSeconds(fakeLoadTime);
             LoadingText.gameObject.SetActive(false);

@@ -7,8 +7,11 @@ using UnityEngine.UI;
 
 namespace SweetAndSaltyStudios
 {
-    public class UIButton : Button
+    public class UIButton : UIElement
     {
-
+        public void ChangeBackgroundColor(Color newBackgroundColor)
+        {
+            icon.color = newBackgroundColor;
+        }
     }
 }
