@@ -13,14 +13,7 @@ namespace SweetAndSaltyStudios
         #region VARIABLES
 
         [Header("Main variables")]
-        public UIScreen StartingScreen;
-
-        [Header("Scene start & end events")]
-        public UnityEvent OnSceneStart = new UnityEvent();
-        public UnityEvent OnSceneEnd = new UnityEvent();
-
-        [Header("Screen events")]
-        public UnityEvent OnScreenSwitched = new UnityEvent();
+        public BaseUIScreen StartingScreen;
 
         private Material dissolveMaterial;
         private int dissolveParameterID;
@@ -33,20 +26,19 @@ namespace SweetAndSaltyStudios
         public TextMeshProUGUI ScoreModifierText;
 
         private readonly float fadeDuration = 0.4f;
-        private readonly float fakeLoadTime = 2f;
-        private readonly float sceneStartTime = 1f;
+        private readonly float fakeLoadTime = 0.5f;
 
         #endregion VARIABLES
 
         #region PROPERTIES
 
-        public UIScreen CurrentUIScreen
+        public BaseUIScreen CurrentUIScreen
         {
             get;
             private set;
         }
 
-        public UIScreen PreviousUIScreen
+        public BaseUIScreen PreviousUIScreen
         {
             get;
             private set;
@@ -69,8 +61,7 @@ namespace SweetAndSaltyStudios
 
         private void Start()
         {
-            dissolveMaterial.SetFloat(dissolveParameterID, 0f);
-            Invoke("OnStart", sceneStartTime);
+            StartCoroutine(IStartScene());
         }
 
         private void Update()
@@ -96,7 +87,7 @@ namespace SweetAndSaltyStudios
 
             screenFadeImageCanvasGroup = canvas.GetComponent<CanvasGroup>();
 
-            var uiScreens = FindObjectsOfType<UIScreen>();
+            var uiScreens = FindObjectsOfType<BaseUIScreen>();
 
             for (int i = 0; i < uiScreens.Length; i++)
             {
@@ -114,7 +105,7 @@ namespace SweetAndSaltyStudios
             ScoreModifierText.text = "SCORE: " + newDistance.ToString("0") + " X";
         }
 
-        public void ScreenFade(float targetAlpha)
+        private void ScreenFade(float targetAlpha)
         {
             if (IsFading == false)
             {
@@ -122,41 +113,9 @@ namespace SweetAndSaltyStudios
             }
         }
 
-        private void OnStart()
+        public void SwitchScreens(BaseUIScreen newScreen)
         {
-            OnSceneStart.Invoke();
-            SwitchScreens(StartingScreen);
-        }
-
-        private void OnQuit()
-        {
-#if UNITY_EDITOR
-
-            dissolveMaterial.SetFloat(dissolveParameterID, 1f);
-            EditorApplication.isPlaying = false;
-
-#else
-
-            Application.Quit();
-
-#endif
-        }
-
-        public void SwitchScreens(UIScreen newScreen)
-        {
-            if (newScreen)
-            {
-                if (CurrentUIScreen)
-                {
-                    CurrentUIScreen.CloseScreen();
-                    PreviousUIScreen = CurrentUIScreen;
-                }
-
-                CurrentUIScreen = newScreen;
-                CurrentUIScreen.OpenScreen();
-
-                OnScreenSwitched.Invoke();
-            }
+            StartCoroutine(ISwitchScreens(newScreen));
         }
 
         public void SwitchPreviousScreen()
@@ -169,8 +128,7 @@ namespace SweetAndSaltyStudios
 
         public void QuitGame()
         {
-            OnSceneEnd.Invoke();
-            Invoke("OnQuit", sceneStartTime);
+            StartCoroutine(IQuit());
         }
 
         public void CrossFade(Func<bool> func = null)
@@ -189,6 +147,23 @@ namespace SweetAndSaltyStudios
         #endregion CUSTOM_FUNCTIONS
 
         #region COROUTINES
+
+        private IEnumerator ISwitchScreens(BaseUIScreen newScreen)
+        {
+            if (newScreen)
+            {
+                if (CurrentUIScreen)
+                {
+                    CurrentUIScreen.CloseScreen();
+                    PreviousUIScreen = CurrentUIScreen;
+                }
+
+                CurrentUIScreen = newScreen;
+                CurrentUIScreen.OpenScreen();
+
+                yield return null;
+            }
+        }
 
         private IEnumerator IScreenFadeShader(float targetAlpha)
         {
@@ -223,6 +198,48 @@ namespace SweetAndSaltyStudios
 
             ScreenFade(1f);
             yield return new WaitWhile(() => IsFading);
+        }
+
+        private IEnumerator IStartScene()
+        {
+            dissolveMaterial.SetFloat(dissolveParameterID, 0f);
+
+            LoadingText.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(fakeLoadTime);
+
+            LoadingText.gameObject.SetActive(false);
+
+            ScreenFade(1);
+
+            yield return new WaitWhile(() => IsFading);
+
+            SwitchScreens(StartingScreen);
+        }
+
+        private IEnumerator IQuit()
+        {     
+            CurrentUIScreen.CloseScreen();
+
+            ScreenFade(0);
+
+            yield return new WaitWhile(() => IsFading);
+
+            LoadingText.text = "GOODBYE!";
+            LoadingText.gameObject.SetActive(true);
+
+            yield return new WaitForSeconds(fakeLoadTime);
+
+#if UNITY_EDITOR
+
+            dissolveMaterial.SetFloat(dissolveParameterID, 1f);
+            EditorApplication.isPlaying = false;
+
+#else
+
+            Application.Quit();
+
+#endif
         }
 
         #endregion COROUTINES

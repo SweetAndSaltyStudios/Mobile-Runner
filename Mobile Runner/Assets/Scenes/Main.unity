@@ -664,7 +664,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 801345140}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -800,55 +800,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StartingScreen: {fileID: 379383565}
-  OnSceneStart:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 103882567}
-        m_MethodName: ScreenFade
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnSceneEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 103882567}
-        m_MethodName: ScreenFade
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenSwitched:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2016237142}
-        m_MethodName: PlayUISoundEffect
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 57615b2e49bd342528393467a22c2a85,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
   AccelerationVisualBar: {fileID: 616969264}
   CollectableCountText: {fileID: 1744891029}
   LoadingText: {fileID: 152673642}
@@ -982,7 +933,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1134426433}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1009,7 +960,7 @@ GameObject:
   - component: {fileID: 138033313}
   - component: {fileID: 138033314}
   m_Layer: 0
-  m_Name: LevelManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1041,12 +992,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838ebd9ad9863a549a19f5f387b3a67f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnLevelStart:
+  OnGameStart:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  OnLevelEnd:
+  OnGamePaused:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  OnGameEnd:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 103882567}
@@ -1054,7 +1010,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2039442881}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1062,12 +1018,75 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  OnLevelPaused:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  IsPaused: 0
+--- !u!1 &144182156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 144182158}
+  - component: {fileID: 144182157}
+  m_Layer: 0
+  m_Name: Directional Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!108 &144182157
+Light:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144182156}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
+  m_Range: 10
+  m_SpotAngle: 30
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_LightShadowCasterMode: 0
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+--- !u!4 &144182158
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 144182156}
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: 0.058927074, y: 6.63, z: 0.42578125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &145833191
 GameObject:
   m_ObjectHideFlags: 0
@@ -1756,7 +1775,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 866288601}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2490,7 +2509,6 @@ GameObject:
   - component: {fileID: 274866728}
   - component: {fileID: 274866730}
   - component: {fileID: 274866732}
-  - component: {fileID: 274866731}
   - component: {fileID: 274866729}
   m_Layer: 5
   m_Name: HowToPlayScreen
@@ -2530,43 +2548,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 274866727}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 91ac714a4738dc6419d2ca7808700917, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 648033279}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 274866727}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 274866727}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &274866730
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2575,25 +2559,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274866727}
   m_CullTransparentMesh: 0
---- !u!95 &274866731
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 274866727}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &274866732
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2665,7 +2630,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 379383565}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3057,7 +3022,6 @@ GameObject:
   - component: {fileID: 379383564}
   - component: {fileID: 379383566}
   - component: {fileID: 379383568}
-  - component: {fileID: 379383567}
   - component: {fileID: 379383565}
   m_Layer: 5
   m_Name: MainMenuScreen
@@ -3097,43 +3061,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 379383563}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 25e9a184172a14248b7fc0d6a08421ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 1855474728}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 379383563}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 379383563}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &379383566
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3142,25 +3072,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 379383563}
   m_CullTransparentMesh: 0
---- !u!95 &379383567
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 379383563}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 456a9bb0eb1903249aca9f254e0f5c8e, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &379383568
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -3344,7 +3255,6 @@ GameObject:
   - component: {fileID: 391168571}
   - component: {fileID: 391168574}
   - component: {fileID: 391168575}
-  - component: {fileID: 391168573}
   - component: {fileID: 391168572}
   m_Layer: 5
   m_Name: SocialScreen
@@ -3384,62 +3294,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 391168570}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 6f9cb70c7a125714da15a4a5990b16b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 797688092}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 391168570}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 391168570}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!95 &391168573
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 391168570}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!222 &391168574
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3815,7 +3672,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -4301,7 +4158,6 @@ GameObject:
   - component: {fileID: 543367436}
   - component: {fileID: 543367438}
   - component: {fileID: 543367440}
-  - component: {fileID: 543367439}
   - component: {fileID: 543367437}
   m_Layer: 5
   m_Name: AudioScreen
@@ -4341,43 +4197,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 543367435}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 4748da69a5174654284d7ba6b9779dd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 1125090299}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 543367435}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 543367435}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &543367438
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4386,25 +4208,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 543367435}
   m_CullTransparentMesh: 0
---- !u!95 &543367439
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 543367435}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &543367440
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4543,7 +4346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -5142,7 +4945,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 801345140}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5527,7 +5330,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 543367437}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5669,7 +5472,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6063,7 +5866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -6144,8 +5947,8 @@ MonoBehaviour:
         m_MethodName: SwitchScreens
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 379383565}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgument: {fileID: 801345140}
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -6332,7 +6135,6 @@ GameObject:
   - component: {fileID: 801345139}
   - component: {fileID: 801345141}
   - component: {fileID: 801345143}
-  - component: {fileID: 801345142}
   - component: {fileID: 801345140}
   m_Layer: 5
   m_Name: OptionsScreen
@@ -6372,43 +6174,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 801345138}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 1844302926b82434cbbc9b4f1dcaae27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 692838690}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 801345138}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 801345138}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &801345141
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6417,25 +6185,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 801345138}
   m_CullTransparentMesh: 0
---- !u!95 &801345142
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 801345138}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &801345143
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -6582,7 +6331,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 801345140}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7054,7 +6803,6 @@ GameObject:
   - component: {fileID: 866288599}
   - component: {fileID: 866288600}
   - component: {fileID: 866288603}
-  - component: {fileID: 866288602}
   - component: {fileID: 866288601}
   m_Layer: 5
   m_Name: HUDScreen
@@ -7102,62 +6850,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 866288598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 5345e6e9da2f98d46bd35390c8f2f1b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 131115905}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 866288598}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 866288598}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!95 &866288602
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866288598}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &866288603
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -7304,7 +6999,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1801637001}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7539,7 +7234,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 391168572}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -7681,7 +7376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -7829,7 +7524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8642,7 +8337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8844,7 +8539,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 801345140}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -8871,7 +8566,6 @@ GameObject:
   - component: {fileID: 1134426432}
   - component: {fileID: 1134426434}
   - component: {fileID: 1134426436}
-  - component: {fileID: 1134426435}
   - component: {fileID: 1134426433}
   m_Layer: 5
   m_Name: PauseScreen
@@ -8911,43 +8605,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1134426431}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: 936930f48b13a81489ffae676dd88187, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 1249092745}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1134426431}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1134426431}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &1134426434
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8956,25 +8616,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134426431}
   m_CullTransparentMesh: 0
---- !u!95 &1134426435
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1134426431}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &1134426436
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -9354,7 +8995,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 866288601}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -9421,7 +9062,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -9707,6 +9348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b70ea476d4802841932dd098fdc6954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameStateText: {fileID: 1378993342}
 --- !u!4 &1331266847
 Transform:
   m_ObjectHideFlags: 0
@@ -9798,6 +9440,166 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357779944}
   m_CullTransparentMesh: 0
+--- !u!1 &1378993341
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1378993344}
+  - component: {fileID: 1378993343}
+  - component: {fileID: 1378993342}
+  m_Layer: 5
+  m_Name: GameStateText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1378993342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378993341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_text: 'Current Game State : NONE'
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_outlineColor:
+    serializedVersion: 2
+    rgba: 4278190080
+  m_fontSize: 40
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 2.59
+  m_fontSizeMax: 40
+  m_fontStyle: 1
+  m_textAlignment: 513
+  m_isAlignmentEnumConverted: 1
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_firstOverflowCharacterIndex: -1
+  m_linkedTextComponent: {fileID: 0}
+  m_isLinkedTextComponent: 0
+  m_isTextTruncated: 0
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_ignoreRectMaskCulling: 0
+  m_ignoreCulling: 1
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_firstVisibleCharacter: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_textInfo:
+    textComponent: {fileID: 1378993342}
+    characterCount: 25
+    spriteCount: 0
+    spaceCount: 4
+    wordCount: 4
+    linkCount: 0
+    lineCount: 1
+    pageCount: 1
+    materialCount: 1
+  m_havePropertiesChanged: 0
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_spriteAnimator: {fileID: 0}
+  m_isInputParsingRequired: 0
+  m_inputSource: 0
+  m_hasFontAssetChanged: 0
+  m_subTextObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1378993343
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378993341}
+  m_CullTransparentMesh: 0
+--- !u!224 &1378993344
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378993341}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1462958521}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 20, y: 0}
+  m_SizeDelta: {x: 1000, y: 100}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &1436613564
 GameObject:
   m_ObjectHideFlags: 0
@@ -9857,7 +9659,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 379383565}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -10113,6 +9915,7 @@ RectTransform:
   - {fileID: 1672444665}
   - {fileID: 1504602777}
   - {fileID: 152673641}
+  - {fileID: 1378993344}
   m_Father: {fileID: 103882566}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10172,7 +9975,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 534669904}
   m_PlaneDistance: 100
-  m_PixelPerfect: 1
+  m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -11155,7 +10958,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 379383565}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12142,7 +11945,6 @@ GameObject:
   - component: {fileID: 1801637000}
   - component: {fileID: 1801637002}
   - component: {fileID: 1801637004}
-  - component: {fileID: 1801637003}
   - component: {fileID: 1801637001}
   m_Layer: 5
   m_Name: GraphicsScreen
@@ -12182,43 +11984,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1801636999}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: a372915b71f344a41b915f062fdc7965, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 839271916}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1801636999}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1801636999}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &1801637002
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -12227,25 +11995,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1801636999}
   m_CullTransparentMesh: 0
---- !u!95 &1801637003
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1801636999}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &1801637004
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -12372,6 +12121,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2580b714e81966e4c8a0b4967d53f514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &1841467793
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 100000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_Name
+      value: Anvil
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 3a2871c69d3f4e6479bb09fbd1ae54d5, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 854a324ea7d54b64e8b3b0e5c7fff541, type: 3}
 --- !u!1 &1855474728
 GameObject:
   m_ObjectHideFlags: 0
@@ -12431,18 +12241,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 866288601}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 138033314}
-        m_MethodName: StartLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12517,7 +12316,7 @@ MonoBehaviour:
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 866288601}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -12659,7 +12458,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12740,8 +12539,8 @@ MonoBehaviour:
         m_MethodName: SwitchScreens
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 274866729}
-          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.UIScreen, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: SweetAndSaltyStudios.BaseUIScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -13080,7 +12879,6 @@ GameObject:
   - component: {fileID: 2039442880}
   - component: {fileID: 2039442882}
   - component: {fileID: 2039442884}
-  - component: {fileID: 2039442883}
   - component: {fileID: 2039442881}
   m_Layer: 5
   m_Name: GameOverScreen
@@ -13120,43 +12918,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2039442879}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93aaabe4b715d8347ae9be3a0d358268, type: 3}
+  m_Script: {fileID: 11500000, guid: e941a38446dfb284fba47bb2aca91a61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartSelectableGameObject: {fileID: 1896934805}
-  LastSelectableGameObject: {fileID: 0}
-  OnScreenOpen:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2039442879}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
-  OnScreenClose:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2039442879}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &2039442882
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13165,25 +12929,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039442879}
   m_CullTransparentMesh: 0
---- !u!95 &2039442883
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2039442879}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 60bff1cad152d134e83dfe676e277696, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!225 &2039442884
 CanvasGroup:
   m_ObjectHideFlags: 0

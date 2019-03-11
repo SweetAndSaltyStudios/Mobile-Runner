@@ -2,7 +2,7 @@
 
 namespace SweetAndSaltyStudios
 {
-    public class UIToggleButton : UIElement
+    public class UIToggleButton : UIButton
     {
         [HideInInspector]
         public Sprite toggleOn, toggleOff;
@@ -19,14 +19,7 @@ namespace SweetAndSaltyStudios
         {
             CurrentToggleState = state;
 
-            if (state)
-            {
-                icon.sprite = toggleOn;
-            }
-            else
-            {
-                icon.sprite = toggleOff;
-            }
+            icon.sprite = CurrentToggleState ? toggleOn : toggleOff;
         }
     }
 }

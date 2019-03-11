@@ -25,7 +25,13 @@ namespace SweetAndSaltyStudios
 
         private readonly float respawnOffset = -5f;
 
-        private bool canMove;
+        public bool CanMove
+        {
+            get
+            {
+                return GameManager.Instance.CurrentGameState.Equals(GAME_STATE.RUNNING);
+            }
+        }
 
         private readonly float angularVelocityHitBoost = 8f;
         
@@ -51,11 +57,11 @@ namespace SweetAndSaltyStudios
 
         private void Update()
         {
-            if (canMove)
+            if (CanMove)
             {
                 horizontalMovementDirection = InputManager.Instance.GetHorizontalAxis;
              
-                LevelManager.Instance.UpdateScoreModifier(currentForwardMovementSpeed - startingForwardMovementSpeed);
+                GameManager.Instance.UpdateScoreModifier(currentForwardMovementSpeed - startingForwardMovementSpeed);
             }
 
             if (PlayerPosition.y <= respawnOffset)
@@ -66,7 +72,7 @@ namespace SweetAndSaltyStudios
 
         private void FixedUpdate()
         {
-            if (canMove)
+            if (CanMove)
             {
                 rigidbody.position = rigidbody.position + (new Vector3(horizontalMovementDirection * horizontalMovementSpeed, 0, currentForwardMovementSpeed)) * Time.deltaTime;
                 rigidbody.position = new Vector3(Mathf.Clamp(rigidbody.position.x, -4, 4), rigidbody.position.y, rigidbody.position.z);
@@ -85,13 +91,11 @@ namespace SweetAndSaltyStudios
 
         public void Die()
         {
-            canMove = false;
-
             rigidbody.angularVelocity *= angularVelocityHitBoost;
 
-            CameraEngine.Instance.Shake(Random.Range(0.15f, 0.25f), Random.Range(0.25f, 0.6f));
-            LevelManager.Instance.SlowTime();
-            //LevelManager.Instance.EndLevel();
+            CameraEngine.Instance.Shake(Random.Range(1f, 2f), Random.Range(0.25f, 0.6f));
+            GameManager.Instance.SlowTime();
+            GameManager.Instance.ChangeGameState(GAME_STATE.END);
         }
 
         public void IncreaseMovementSpeed()

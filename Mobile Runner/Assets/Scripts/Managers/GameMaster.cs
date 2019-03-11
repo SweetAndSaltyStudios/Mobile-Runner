@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 
 namespace SweetAndSaltyStudios
 {
@@ -6,7 +7,7 @@ namespace SweetAndSaltyStudios
     {
         #region VARIABLES
 
-
+        public TextMeshProUGUI GameStateText;
 
         #endregion VARIABLES
 
@@ -19,6 +20,11 @@ namespace SweetAndSaltyStudios
         protected override void Awake()
         {
             Initialize();
+        }
+
+        private void Update()
+        {
+            GameStateText.text = "Current Game State: " + GameManager.Instance.CurrentGameState.ToString();
         }
 
         #endregion UNITY_FUNCTIONS

@@ -66,11 +66,11 @@ namespace SweetAndSaltyStudios
                 return Tilt.x;
             }
         }
-        public bool FirstTouch
+        public bool FirstTap
         {
             get
             {
-                return Input.GetMouseButtonDown(0);
+                return Input.GetMouseButtonDown(0) && IsPointerOverUI;
             }
         }
         public bool IsPointerOverUI

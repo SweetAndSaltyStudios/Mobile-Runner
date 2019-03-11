@@ -47,6 +47,12 @@ public class ObjectPoolManager : Singelton<ObjectPoolManager>
 
     public void DespawnObject(GameObject prefabInstance)
     {
+        if(prefabInstance == null)
+        {
+            Debug.LogWarning("Despawn object: NULL");
+            return;
+        }
+
         prefabInstance.SetActive(false);
 
         var prefabName = prefabInstance.name;

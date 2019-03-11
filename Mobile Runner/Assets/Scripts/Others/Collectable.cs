@@ -42,7 +42,7 @@ namespace SweetAndSaltyStudios
         {
             if (other.gameObject.layer.Equals(11))
             {
-                LevelManager.Instance.AddCollectable(1);
+                GameManager.Instance.AddCollectable(1);
 
                 AudioManager.Instance.PlaySfxAtPoint("Collect", transform.position);
 

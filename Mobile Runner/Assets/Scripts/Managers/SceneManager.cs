@@ -60,7 +60,7 @@ namespace SweetAndSaltyStudios
         {
             isLoading = true;
 
-            yield return new WaitWhile(() => LevelManager.Instance.IsSlowingTime);
+            yield return new WaitWhile(() => GameManager.Instance.IsSlowingTime);
             yield return new WaitWhile(() => UIManager.Instance.IsFading);
 
             LoadScene(CurrentSceneIndex);
